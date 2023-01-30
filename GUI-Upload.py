@@ -24,7 +24,7 @@ def searchFolder(folderName):
             print("Folder '" + folderName + "' found")
             return folder
 
-    print("Could not find folder " + folderName)
+    print("Could not find " + folderName)
     exit()
         
 def searchFile(Gfilename):
