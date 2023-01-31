@@ -70,6 +70,18 @@ def searchFile(Gfilename):
     for file1 in file_list:
         file_hype = file1['title'].split('v')
         if file_hype[0] ==  Gfilename:
+            version = file_hype[1].split('.')
+            version = int(version[0])
+            return version
+    print("Could not find the file named "+Gfilename)
+    exit()
+def Delete_GFile(Gfilename):
+    global drive
+    global folder
+    file_list = drive.ListFile({'q': "'1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO' in parents and trashed=false"}).GetList()
+    for file1 in file_list:
+        file_hype = file1['title'].split('v')
+        if file_hype[0] ==  Gfilename:
             drive.CreateFile({
                 'title': file1['title'],
                 'id': file1['id'],
@@ -78,13 +90,8 @@ def searchFile(Gfilename):
                     'id': '1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO' 
                     }]}).Delete()
 
-            print('title: %s, id: %s' % (file1['title'], file1['id']))
-            version = file_hype[1].split('.')
-            version = int(version[0])
-            return version
-    print("Could not find the file named "+Gfilename)
-    exit()
-        
+            print('title: %s, id: %s and is deleted' % (file1['title'], file1['id']))
+
 class ThirdTabLoads(QWidget):
 
     def __init__(self, parent=None):
@@ -139,7 +146,8 @@ class ThirdTabLoads(QWidget):
         print(version)
         print(filename)
         old_version = searchFile("mainApplication_encrypted")
-        if version> old_version:  
+        if version> old_version: 
+            Delete_GFile("mainApplication_encrypted") 
             if filename1:
                 path = encrypt_file(filename1)
                 name = path.split("/")
