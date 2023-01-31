@@ -8,6 +8,12 @@ import os
 import openpyxl
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+import re
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad
+import binascii
+import base64
 
 # SENDING IS C5D9F1
 # RECIEVING IS E6B8B7
@@ -15,7 +21,33 @@ coloumn_count = 0
 import json
 import requests
 
+def encrypt_file(file_path):
+    with open(file_path, "rb") as f:
+        hex_file = f.read()
 
+    # Generate a random key and initialization vector
+    key = get_random_bytes(16)
+    iv = get_random_bytes(16)
+
+    # Save the key and IV to a secure file
+    secure_file_path = "secure_key_and_iv.bin"
+    with open(secure_file_path, "wb") as f:
+        f.write(key + iv)
+
+    # Encrypt the key and IV
+    # Create a new AES-ECB cipher
+    cipher = AES.new(key, AES.MODE_ECB)
+
+    # Encrypt the hex file
+    hex_file = pad(hex_file, 16)
+    ciphertext = cipher.encrypt(hex_file)
+
+    # Save the encrypted data to a new file
+    encrypted_file_path = os.path.splitext(file_path)[0] + "_encrypted.bin"
+    with open(encrypted_file_path, "wb") as f:
+        f.write(ciphertext)
+    print(f"File has been encrypted successfully and saved to {encrypted_file_path}")       
+    
 def searchFolder(folderName):
     global drive
     response = drive.ListFile({"q": "mimeType='application/vnd.google-apps.folder' and trashed=false"}).GetList()
@@ -69,6 +101,8 @@ class ThirdTabLoads(QWidget):
         CON_button = QtWidgets.QPushButton("Encrypt .hex file")
         #CON_button.clicked.connect()
         Upload_button.clicked.connect(self.upload_file)
+        # CON_button.clicked.connect(self.encrypt_file)
+
 
         button_layout = QtWidgets.QVBoxLayout()
         button_layout.addWidget(Upload_button, alignment=QtCore.Qt.AlignBottom)
@@ -91,8 +125,8 @@ class ThirdTabLoads(QWidget):
         global filename
         global sourceFolder
         global Google_DriveFolder
-        filename,_ = QFileDialog.getOpenFileName(self, 'Single File', sourceFolder , '*.hex')
-        filename = filename.split('/')
+        filename1,_ = QFileDialog.getOpenFileName(self, 'Single File', sourceFolder , '*.hex')
+        filename = filename1.split('/')
         filename = filename[-1]
         file_type=filename.split("v")
         sourceFile = sourceFolder+'/'+ filename
@@ -111,19 +145,21 @@ class ThirdTabLoads(QWidget):
         })
             file.SetContentFile(sourceFile)
             file.Upload()
+            if filename1:
+                self.encrypt_file(filename1)
             
         else:
-            print("You are trying to upload an older version")        
-        #print(filename)
-        #self.QtGui.ui.lineEdit.setText(fileName)
-
+            print("You are trying to upload an older version")    
+    # Function to browse for a file and encrypt its content
+   
         
         
 
 if __name__ == '__main__':
     filename = ""
     Google_DriveFolder = "FOTA-Version-Control"
-    sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/Upload-Folder'
+    sourceFolder = os.path.expanduser('~')
+    print(sourceFolder)
     app = QtWidgets.QApplication(sys.argv)
     gauth = GoogleAuth()
     gauth.LocalWebserverAuth()
