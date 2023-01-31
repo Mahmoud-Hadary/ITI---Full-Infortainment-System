@@ -43,10 +43,14 @@ def encrypt_file(file_path):
     ciphertext = cipher.encrypt(hex_file)
 
     # Save the encrypted data to a new file
-    encrypted_file_path = os.path.splitext(file_path)[0] + "_encrypted.bin"
+    encrypted_file_path =  os.path.splitext(file_path)[0] 
+    splited = encrypted_file_path.split("v")[0]
+    splited = splited + "_encryptedv"+encrypted_file_path.split("v")[1]+".bin"
+    encrypted_file_path = splited
     with open(encrypted_file_path, "wb") as f:
         f.write(ciphertext)
-    print(f"File has been encrypted successfully and saved to {encrypted_file_path}")       
+    print(f"File has been encrypted successfully and saved to {encrypted_file_path}")   
+    return encrypted_file_path    
     
 def searchFolder(folderName):
     global drive
@@ -134,19 +138,22 @@ class ThirdTabLoads(QWidget):
         version = int(file_type[1].split('.')[0])
         print(version)
         print(filename)
-        old_version = searchFile("mainApplication")
-        if version> old_version:    
-            file = drive.CreateFile({
-        'title': filename,
+        old_version = searchFile("mainApplication_encrypted")
+        if version> old_version:  
+            if filename1:
+                path = encrypt_file(filename1)
+                name = path.split("/")
+                name = name[-1]
+
+                file = drive.CreateFile({
+        'title': name,
         'parents': [{
             'kind': 'drive#fileLink', 
             'id': folder['id'] 
             }]
         })
-            file.SetContentFile(sourceFile)
-            file.Upload()
-            if filename1:
-                self.encrypt_file(filename1)
+                file.SetContentFile(sourceFile)
+                file.Upload()
             
         else:
             print("You are trying to upload an older version")    
@@ -158,7 +165,7 @@ class ThirdTabLoads(QWidget):
 if __name__ == '__main__':
     filename = ""
     Google_DriveFolder = "FOTA-Version-Control"
-    sourceFolder = os.path.expanduser('~')
+    sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/Upload-Folder'
     print(sourceFolder)
     app = QtWidgets.QApplication(sys.argv)
     gauth = GoogleAuth()
