@@ -3,7 +3,7 @@ ITI Final Project
 
 
 #Group Partaciapnts
-1 - Group Leader: Pola Beshay
+1 - Group Leader: Pola Beshay/n
 2 - Ahmed Kilandy
 3 - Mohamed Hamdey
 4 - Moastafa Rashed
