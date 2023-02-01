@@ -9,7 +9,6 @@ import openpyxl
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import re
-import pandas as pd
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
