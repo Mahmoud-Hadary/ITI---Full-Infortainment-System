@@ -81,7 +81,7 @@ def searchFile(Gfilename):
             return version
     msg3 = QMessageBox()
     msg3.setWindowTitle("Error")
-    msg2.setText("Could not find the file named "+Gfilename)
+    msg3.setText("Could not find the file named "+Gfilename)
     msg3.setIcon(QMessageBox.Critical)
     msg3.exec_()        
     #QWidgets.QMessageBox.Critical(self,"Could not find the file named "+Gfilename)
