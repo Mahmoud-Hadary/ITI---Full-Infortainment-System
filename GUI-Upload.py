@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon,QPalette,QBrush,QPixmap
 import pandas as pd
 import xlwt
 import os
@@ -49,6 +49,7 @@ def encrypt_file(file_path):
     encrypted_file_path = splited
     with open(encrypted_file_path, "wb") as f:
         f.write(ciphertext)
+    #QtWidgets.QMessageBox.critical(self, f"File has been encrypted successfully and saved to {encrypted_file_path}")    
     print(f"File has been encrypted successfully and saved to {encrypted_file_path}")   
     return encrypted_file_path    
     
@@ -60,7 +61,7 @@ def searchFolder(folderName):
             print("Folder '" + folderName + "' found")
             return folder
 
-    print("Could not find " + folderName)
+    QWidgets.QMessageBox.Critical(self,"Could not find " + folderName)
     exit()
         
 def searchFile(Gfilename):
@@ -73,7 +74,7 @@ def searchFile(Gfilename):
             version = file_hype[1].split('.')
             version = int(version[0])
             return version
-    print("Could not find the file named "+Gfilename)
+    QWidgets.QMessageBox.Critical(self,"Could not find the file named "+Gfilename)
     exit()
 def Delete_GFile(Gfilename):
     global drive
@@ -96,40 +97,41 @@ class ThirdTabLoads(QWidget):
 
     def __init__(self, parent=None):
         super(ThirdTabLoads, self).__init__(parent)    
-        self.setFixedSize(560,450)
+        self.setFixedSize(360,250)
         self.setWindowTitle('Upload')
-        self.setWindowIcon(QIcon('download.png'))
-
-        Upload_button = QtWidgets.QPushButton("Upload File")
+        self.setWindowIcon(QIcon('upload.png'))
+        # Set the background image
+        palette = QPalette()
+        palette.setBrush(QPalette.Background, QBrush(QPixmap("background.png")))
+        self.setPalette(palette)
         
-        Save_button = QtWidgets.QPushButton("Save")
-        #self.Save_button = QPushButton('&Export',clicked=self.switch_window)
-        #layout.addWidget(self.Save_button)
-        #Save_button.clicked.connect(table.savefile)  #saves the data and transfers it into an excel sheet then opens a new window
-
-        delete_button = QtWidgets.QPushButton("Delete")
-
-        CON_button = QtWidgets.QPushButton("Encrypt .hex file")
-        #CON_button.clicked.connect()
+        # Create a QVBoxLayout
+        layout = QVBoxLayout()
+        
+        # Add widgets to the layout
+        Upload_button = QPushButton("Upload File")
+        layout.addWidget(Upload_button)
+        
+        # Set the layout
+        self.setLayout(layout)
+        
+        # Connect the button to the function
         Upload_button.clicked.connect(self.upload_file)
-        # CON_button.clicked.connect(self.encrypt_file)
+        
+        # Add stylesheet
+        self.setStyleSheet("""
+            QPushButton:hover {
+                background-color: red;
+            }
+            QPushButton {
+                background-color: green;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px;
+            }
+        """)
 
-
-        button_layout = QtWidgets.QVBoxLayout()
-        button_layout.addWidget(Upload_button, alignment=QtCore.Qt.AlignBottom)
-        button_layout.addWidget(delete_button, alignment=QtCore.Qt.AlignTop)
-        button_layout.addWidget(Save_button, alignment=QtCore.Qt.AlignBottom)
-        try:
-            button_layout.addWidget(CON_button, alignment=QtCore.Qt.AlignBottom)
-        except:
-            QtWidgets.QMessageBox.critical(self, "Invalid Input", "There is nothing to animate yet")
-        tablehbox = QtWidgets.QHBoxLayout()
-        tablehbox.setContentsMargins(10, 10, 10, 10)
-        #tablehbox.addWidget(table)
-
-        grid = QtWidgets.QGridLayout(self)
-        grid.addLayout(button_layout, 0, 1)
-        grid.addLayout(tablehbox, 0, 0)   
         
              
     def upload_file(self):
@@ -162,9 +164,10 @@ class ThirdTabLoads(QWidget):
         })
                 file.SetContentFile(sourceFile)
                 file.Upload()
+                QtWidgets.QMessageBox.Ok(self, f"File {name} has been Uploaded successfully and saved to Google Drive")
             
         else:
-            print("You are trying to upload an older version")    
+            QWidgets.QMessageBox.Critical(self,"You are trying to upload an older version")    
     # Function to browse for a file and encrypt its content
    
         
@@ -176,9 +179,9 @@ if __name__ == '__main__':
     sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/Upload-Folder'
     print(sourceFolder)
     app = QtWidgets.QApplication(sys.argv)
-    gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()
-    drive = GoogleDrive(gauth)
+    #gauth = GoogleAuth()
+    #gauth.LocalWebserverAuth()
+    #drive = GoogleDrive(gauth)
     w = ThirdTabLoads()
     w.show()
     sys.exit(app.exec_())
