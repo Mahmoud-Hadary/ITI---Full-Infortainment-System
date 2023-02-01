@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog,QMessageBox
 from PyQt5.QtGui import QIcon,QPalette,QBrush,QPixmap
 import pandas as pd
 import xlwt
@@ -49,7 +49,7 @@ def encrypt_file(file_path):
     encrypted_file_path = splited
     with open(encrypted_file_path, "wb") as f:
         f.write(ciphertext)
-    #QtWidgets.QMessageBox.critical(self, f"File has been encrypted successfully and saved to {encrypted_file_path}")    
+    
     print(f"File has been encrypted successfully and saved to {encrypted_file_path}")   
     return encrypted_file_path    
     
@@ -61,7 +61,12 @@ def searchFolder(folderName):
             print("Folder '" + folderName + "' found")
             return folder
 
-    QWidgets.QMessageBox.Critical(self,"Could not find " + folderName)
+    msg4 = QMessageBox()
+    msg4.setWindowTitle("Error")
+    msg4.setText("Could not find " + folderName)
+    msg4.setIcon(QMessageBox.Critical)
+    msg4.exec_()    
+    #QWidgets.QMessageBox.Critical(self,"Could not find " + folderName)
     exit()
         
 def searchFile(Gfilename):
@@ -74,7 +79,12 @@ def searchFile(Gfilename):
             version = file_hype[1].split('.')
             version = int(version[0])
             return version
-    QWidgets.QMessageBox.Critical(self,"Could not find the file named "+Gfilename)
+    msg3 = QMessageBox()
+    msg3.setWindowTitle("Error")
+    msg2.setText("Could not find the file named "+Gfilename)
+    msg3.setIcon(QMessageBox.Critical)
+    msg3.exec_()        
+    #QWidgets.QMessageBox.Critical(self,"Could not find the file named "+Gfilename)
     exit()
 def Delete_GFile(Gfilename):
     global drive
@@ -155,6 +165,7 @@ class ThirdTabLoads(QWidget):
                 name = path.split("/")
                 name = name[-1]
 
+
                 file = drive.CreateFile({
         'title': name,
         'parents': [{
@@ -164,12 +175,23 @@ class ThirdTabLoads(QWidget):
         })
                 file.SetContentFile(sourceFile)
                 file.Upload()
-                QtWidgets.QMessageBox.Ok(self, f"File {name} has been Uploaded successfully and saved to Google Drive")
-            
+                msg1 = QMessageBox()
+                msg1.setWindowTitle("Uploaded Suceesfully")
+                msg1.setText(f"File {name} has been Uploaded successfully and saved to Google Drive")
+                msg1.setIcon(QMessageBox.Information)
+                msg1.exec_()
+    
         else:
-            QWidgets.QMessageBox.Critical(self,"You are trying to upload an older version")    
+            msg2 = QMessageBox()
+            msg2.setWindowTitle("Error")
+            msg2.setText("You are trying to upload an older version.")
+            msg2.setIcon(QMessageBox.Critical)
+            msg2.exec_()
+
+            #print("You are trying to upload an older version")
+            #QWidgets.QMessageBox.Critical(self,"You are trying to upload an older version")    
     # Function to browse for a file and encrypt its content
-   
+    
         
         
 
