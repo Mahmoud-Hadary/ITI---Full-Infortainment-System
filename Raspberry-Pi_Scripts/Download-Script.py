@@ -36,5 +36,8 @@ class ThirdTabLoads(QWidget):
 
 
 if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
     w = ThirdTabLoads()
     w.download_file(3)
+    w.show()
+    sys.exit(app.exec_())
