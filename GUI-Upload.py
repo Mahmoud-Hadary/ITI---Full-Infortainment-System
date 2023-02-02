@@ -3,9 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog,QMessageBox
 from PyQt5.QtGui import QIcon,QPalette,QBrush,QPixmap
 import pandas as pd
-import xlwt
 import os
-import openpyxl
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import re
@@ -18,8 +16,6 @@ import base64
 # SENDING IS C5D9F1
 # RECIEVING IS E6B8B7
 coloumn_count = 0
-import json
-import requests
 
 def encrypt_file(file_path):
     with open(file_path, "rb") as f:
@@ -142,8 +138,7 @@ class ThirdTabLoads(QWidget):
             }
         """)
 
-        
-             
+
     def upload_file(self):
         global filename
         global sourceFolder
@@ -164,15 +159,12 @@ class ThirdTabLoads(QWidget):
                 path = encrypt_file(filename1)
                 name = path.split("/")
                 name = name[-1]
-
-
                 file = drive.CreateFile({
-        'title': name,
-        'parents': [{
-            'kind': 'drive#fileLink', 
-            'id': folder['id'] 
-            }]
-        })
+                'title': name,
+                'parents': [{
+                'kind': 'drive#fileLink', 
+                'id': folder['id'] 
+                    }]})
                 file.SetContentFile(sourceFile)
                 file.Upload()
                 msg1 = QMessageBox()
@@ -180,14 +172,12 @@ class ThirdTabLoads(QWidget):
                 msg1.setText(f"File {name} has been Uploaded successfully and saved to Google Drive")
                 msg1.setIcon(QMessageBox.Information)
                 msg1.exec_()
-    
         else:
             msg2 = QMessageBox()
             msg2.setWindowTitle("Error")
             msg2.setText("You are trying to upload an older version.")
             msg2.setIcon(QMessageBox.Critical)
             msg2.exec_()
-
             #print("You are trying to upload an older version")
             #QWidgets.QMessageBox.Critical(self,"You are trying to upload an older version")    
     # Function to browse for a file and encrypt its content
@@ -198,12 +188,12 @@ class ThirdTabLoads(QWidget):
 if __name__ == '__main__':
     filename = ""
     Google_DriveFolder = "FOTA-Version-Control"
-    sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/Upload-Folder'
+    sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/ITI_ADAS_Graduation_Project/Upload-Folder'
     print(sourceFolder)
     app = QtWidgets.QApplication(sys.argv)
-    #gauth = GoogleAuth()
-    #gauth.LocalWebserverAuth()
-    #drive = GoogleDrive(gauth)
+    gauth = GoogleAuth()
+    gauth.LocalWebserverAuth()
+    drive = GoogleDrive(gauth)
     w = ThirdTabLoads()
     w.show()
     sys.exit(app.exec_())
