@@ -17,7 +17,8 @@ import base64
 # RECIEVING IS E6B8B7
 coloumn_count = 0
 
-def encrypt_file(file_path):
+def encrypt_file(file_path,folder):
+    global Key_Folder
     with open(file_path, "rb") as f:
         hex_file = f.read()
 
@@ -29,7 +30,16 @@ def encrypt_file(file_path):
     secure_file_path = "secure_key_and_iv.bin"
     with open(secure_file_path, "wb") as f:
         f.write(key + iv)
-
+    
+    secure = drive.CreateFile({
+                'title': secure_file_path,
+                'parents': [{
+                'kind': 'drive#fileLink', 
+                'id': folder['id'] 
+                    }]})
+    sourceFile = Key_Folder + '/' + secure_file_path
+    secure.SetContentFile(sourceFile)
+    secure.Upload()    
     # Encrypt the key and IV
     # Create a new AES-ECB cipher
     cipher = AES.new(key, AES.MODE_ECB)
@@ -146,7 +156,7 @@ class ThirdTabLoads(QWidget):
         filename1,_ = QFileDialog.getOpenFileName(self, 'Single File', sourceFolder , '*.hex')
         filename = filename1.split('/')
         filename = filename[-1]
-        file_type=filename.split("v")
+        file_type = filename.split("v")
         sourceFile = sourceFolder+'/'+ filename
         folder = searchFolder(Google_DriveFolder)
         version = int(file_type[1].split('.')[0])
@@ -156,7 +166,7 @@ class ThirdTabLoads(QWidget):
         if version> old_version: 
             Delete_GFile("mainApplication_encrypted") 
             if filename1:
-                path = encrypt_file(filename1)
+                path = encrypt_file(filename1,folder)
                 name = path.split("/")
                 name = name[-1]
                 file = drive.CreateFile({
@@ -189,6 +199,7 @@ if __name__ == '__main__':
     filename = ""
     Google_DriveFolder = "FOTA-Version-Control"
     sourceFolder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/ITI_ADAS_Graduation_Project/Upload-Folder'
+    Key_Folder = 'C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/ITI_ADAS_Graduation_Project'
     print(sourceFolder)
     app = QtWidgets.QApplication(sys.argv)
     gauth = GoogleAuth()
