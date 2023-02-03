@@ -16,6 +16,21 @@ import base64
 # SENDING IS C5D9F1
 # RECIEVING IS E6B8B7
 coloumn_count = 0
+def Delete_Key(Gfilename):
+    global drive
+    global folder
+    file_list = drive.ListFile({'q': "'1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO' in parents and trashed=false"}).GetList()
+    for file1 in file_list:
+        if file1['title'] ==  Gfilename:
+            drive.CreateFile({
+                'title': file1['title'],
+                'id': file1['id'],
+                'parents': [{
+                    'kind': 'drive#fileLink', 
+                    'id': '1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO' 
+                    }]}).Delete()
+
+            print('title: %s, id: %s and is deleted' % (file1['title'], file1['id']))
 
 def encrypt_file(file_path,folder):
     global Key_Folder
@@ -31,6 +46,7 @@ def encrypt_file(file_path,folder):
     with open(secure_file_path, "wb") as f:
         f.write(key + iv)
     
+    Delete_Key(secure_file_path)
     secure = drive.CreateFile({
                 'title': secure_file_path,
                 'parents': [{
@@ -109,6 +125,7 @@ def Delete_GFile(Gfilename):
 
             print('title: %s, id: %s and is deleted' % (file1['title'], file1['id']))
 
+
 class ThirdTabLoads(QWidget):
 
     def __init__(self, parent=None):
@@ -158,15 +175,15 @@ class ThirdTabLoads(QWidget):
         filename = filename[-1]
         file_type = filename.split("v")
         sourceFile = sourceFolder+'/'+ filename
+        print("This is the source file " + sourceFile)
         folder = searchFolder(Google_DriveFolder)
         version = int(file_type[1].split('.')[0])
-        print(version)
-        print(filename)
         old_version = searchFile("mainApplication_encrypted")
         if version> old_version: 
             Delete_GFile("mainApplication_encrypted") 
             if filename1:
                 path = encrypt_file(filename1,folder)
+                print("This is the Path file " + path)
                 name = path.split("/")
                 name = name[-1]
                 file = drive.CreateFile({
@@ -175,7 +192,7 @@ class ThirdTabLoads(QWidget):
                 'kind': 'drive#fileLink', 
                 'id': folder['id'] 
                     }]})
-                file.SetContentFile(sourceFile)
+                file.SetContentFile(path)
                 file.Upload()
                 msg1 = QMessageBox()
                 msg1.setWindowTitle("Uploaded Suceesfully")
