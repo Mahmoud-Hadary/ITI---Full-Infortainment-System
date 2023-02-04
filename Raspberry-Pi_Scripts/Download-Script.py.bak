@@ -2,13 +2,6 @@ import gdown, sys
 from urllib.request import urlopen
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog,QMessageBox
-import os
-import re
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad
-import binascii
-import base64
 import tkinter as tk
 from tkinter import filedialog
 
