@@ -28,7 +28,9 @@ class MainWindow(QMainWindow):
         ################################################################################################
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+        self.heart_rate = random.randint(50, 150)
+        self.widget = AnalogGaugeWidget()
+        self.widget.updateValueByVariable(self.heart_rate)
         
     
         ################################################################################################

@@ -1462,7 +1462,7 @@ class AnalogGaugeWidget(QWidget):
                 
     def updateValueByVariable(self):
         self.heart_rate = random.randint(50, 150)
-        self.updateValue(self.heart_rate, mouse_controlled=False) 
+        self.updateValue(new_value, mouse_controlled=False) 
         
         
                 
