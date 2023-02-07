@@ -41,8 +41,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addWidget(self.label_28, 0, QtCore.Qt.AlignHCenter)
         self.verticalLayout.addWidget(self.frame_2)
         self.widget = AnalogGaugeWidget(self.frame)
-        self.heart_rate = random.randint(50, 150)
-        self.updateValueByVariable(self.heart_rate)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
