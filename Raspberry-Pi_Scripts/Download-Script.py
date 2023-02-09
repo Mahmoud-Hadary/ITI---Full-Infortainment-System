@@ -45,7 +45,7 @@ class ThirdTabLoads(QWidget):
         url = 'https://drive.google.com/drive/folders/1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO?usp=share_link'
         current_version = 0
         gdown.download_folder(MetaData)
-        f = open("Metadata/MetaData.txt", "r")
+        f = open("MetaData.txt", "r")
         Lines = f.readlines()
         for items in Lines:
             items = items.split(':')

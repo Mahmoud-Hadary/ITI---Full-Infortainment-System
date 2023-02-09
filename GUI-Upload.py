@@ -178,10 +178,11 @@ class ThirdTabLoads(QWidget):
         print("This is the source file " + sourceFile)
         folder = searchFolder(Google_DriveFolder)
         version = int(file_type[1].split('.')[0])
-        old_version = searchFile("mainApplication_encrypted")
+        old_version = searchFile("ITI_STM32F401CC_encrypted")
         if version> old_version: 
-            Delete_GFile("mainApplication_encrypted") 
+            Delete_GFile("ITI_STM32F401CC_encrypted") 
             if filename1:
+                path_meta =  "C:/Users/m_god/TOBEOPIED/Mahmoud_HardDRIVE/data/GradProject/ITI_ADAS_Graduation_Project/Metadata.txt"
                 path = encrypt_file(filename1,folder)
                 print("This is the Path file " + path)
                 name = path.split("/")
@@ -194,11 +195,24 @@ class ThirdTabLoads(QWidget):
                     }]})
                 file.SetContentFile(path)
                 file.Upload()
+                with open("Metadata.txt",'w') as meta:
+                    meta.write("version:"+str(version))
+                    meta.write('\nfilename:'+name)
+                    meta.close()
+                    file = drive.CreateFile({
+                'title': "Metadata.txt",
+                'parents': [{
+                'kind': 'drive#fileLink', 
+                'id': folder['id'] 
+                    }]})
+                    file.SetContentFile(path_meta)
+                    file.Upload()
                 msg1 = QMessageBox()
                 msg1.setWindowTitle("Uploaded Suceesfully")
                 msg1.setText(f"File {name} has been Uploaded successfully and saved to Google Drive")
                 msg1.setIcon(QMessageBox.Information)
                 msg1.exec_()
+
         else:
             msg2 = QMessageBox()
             msg2.setWindowTitle("Error")
