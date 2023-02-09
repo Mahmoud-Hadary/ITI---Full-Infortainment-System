@@ -1,0 +1,2 @@
+version:5
+filename:ITI_STM32F401CC_encryptedv5.bin
