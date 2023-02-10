@@ -89,7 +89,7 @@ class ThirdTabLoads(QWidget):
                     past_version = line.split(":")[1].strip()
                     break
             print("past version:", past_version)
-        #--------------------------------------------------    
+        #-----------------------------------------------    
         Lines = f.readlines()
         for items in Lines:
             items = items.split(':')
