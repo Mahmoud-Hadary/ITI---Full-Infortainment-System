@@ -53,7 +53,7 @@ class ThirdTabLoads(QWidget):
         hex_file_name = None
         directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM"
         for file in os.listdir(directory):
-            if file.startswith("ITI_STM32F401CC_encrypted"):
+            if file.startswith("ITI_STM32F401CC_GSM_encrypted"):
                 hex_file_name = file
                 print(hex_file_name)
                 break
@@ -166,6 +166,6 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = ThirdTabLoads()
     w.download_file()
-    #w.download_file_GSM()
+    w.download_file_GSM()
     w.show()
     sys.exit(app.exec_())

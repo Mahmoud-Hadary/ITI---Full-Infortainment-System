@@ -1,2 +1,2 @@
-version:12
-filename:ITI_STM32F401CC_encryptedv12.bin
+version:3
+filename:ITI_STM32F401CC_encryptedv3.bin
