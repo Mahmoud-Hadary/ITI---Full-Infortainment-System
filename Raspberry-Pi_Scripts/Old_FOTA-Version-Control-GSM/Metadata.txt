@@ -1,2 +1,2 @@
-version:5
-filename:ITI_STM32F401CC_encryptedv5.bin
+version:7
+filename:ITI_STM32F401CC_GSM_encryptedv7.bin
