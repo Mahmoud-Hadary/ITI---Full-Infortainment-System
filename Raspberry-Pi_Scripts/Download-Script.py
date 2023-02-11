@@ -15,13 +15,21 @@ from tkinter import filedialog
 class ThirdTabLoads(QWidget):
     #Function to browse for an encrypted file and decrypt its content
     def decrypt_file(self):
-        # Open file dialog to select an encrypted file
-        encrypted_file_path = filedialog.askopenfilename(filetypes=[("Encrypted files", "*.bin")])
-        with open(encrypted_file_path, "rb") as f:
+        # open
+        hex_file_name = None
+        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main"
+        for file in os.listdir(directory):
+            if file.startswith("ITI_STM32F401CC_encrypted"):
+                hex_file_name = file
+                print(hex_file_name)
+                break
+
+        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/"+str(hex_file_name)
+        with open(Fpath, "rb") as f:
             encrypted_file = f.read()
 
         # Open the secure file and read the key and IV
-        secure_file_path = "F:\ITI_Final_Project\ITI_ADAS_Graduation_Project\Raspberry-Pi_Scripts\FOTA-Version-Control\secure_key_and_iv.bin"
+        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/secure_key_and_iv.bin"    
         with open(secure_file_path, "rb") as f:
             secure_file = f.read()
         key = secure_file[:16]
@@ -34,18 +42,53 @@ class ThirdTabLoads(QWidget):
         hex_file = cipher.decrypt(encrypted_file)
 
         # Save the decrypted data to a new file
-        decrypted_file_path = os.path.splitext(encrypted_file_path)[0] + "_decrypted.hex"
-        with open(decrypted_file_path, "wb") as f:
+        #decrypted_file_path = os.path.splitext(encrypted_file_path)[0] + "_decrypted.hex"
+        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/"+str(hex_file_name)+ "_decrypted.hex"
+        with open(Dpath, "wb") as f:
             f.write(hex_file)
-        print(f"File has been decrypted successfully and saved to {decrypted_file_path}")
+        print(f"File has been decrypted successfully and saved")
+
+    def decrypt_file_GSM(self):
+        # Open file dialog to select an encrypted file
+        hex_file_name = None
+        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM"
+        for file in os.listdir(directory):
+            if file.startswith("ITI_STM32F401CC_encrypted"):
+                hex_file_name = file
+                print(hex_file_name)
+                break
+
+        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)
+        with open(Fpath, "rb") as f:
+            encrypted_file = f.read()
+
+        # Open the secure file and read the key and IV
+        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/secure_key_and_iv.bin"    
+        with open(secure_file_path, "rb") as f:
+            secure_file = f.read()
+        key = secure_file[:16]
+        iv = secure_file[16:]
+
+        # Create a new AES-ECB cipher
+        cipher = AES.new(key, AES.MODE_ECB)
+
+        # Decrypt the encrypted file
+        hex_file = cipher.decrypt(encrypted_file)
+
+        # Save the decrypted data to a new file
+        #decrypted_file_path = os.path.splitext(encrypted_file_path)[0] + "_decrypted.hex"
+        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)+ "_decrypted.hex"
+        with open(Dpath, "wb") as f:
+            f.write(hex_file)
+        print(f"File has been decrypted successfully and saved")
 
 #shutil.rmtree(path, ignore_errors=False, onerror=None, *, dir_fd=None)
     def download_file(self):    
-        url = 'https://drive.google.com/drive/folders/1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO?usp=share_link'
+        url = 'https://drive.google.com/drive/folders/1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO?usp=sharing'
         current_version = 0
         gdown.download_folder(url)
-        f = open("FOTA-Version-Control-Main/Metadata.txt", "r")
-        with open("Old_FOTA-Version-Control-Main/Metadata.txt", "r") as NEV :
+        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/FOTA-Version-Control-Main/Metadata.txt", "r")
+        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/Metadata.txt", "r") as NEV :
             data = NEV.read()
             for line in data.split("\n"):
                 if line.startswith("version:"):
@@ -83,22 +126,16 @@ class ThirdTabLoads(QWidget):
     def download_file_GSM(self):    
         url = 'https://drive.google.com/drive/folders/1KGUhNt6M64gnHKs3s68Umok8oSabzraZ?usp=share_link'
         current_version = 0
-        #------------------------------------------------------
-        #change to download file
-        gdown.download(url, "MetaData.txt")         
-        f = open("FOTA-Version-Control-GSM/Metadata.txt", "r")
-
-        #gdown.download_folder(url)
-        
-        #get past version then delete metadata
-        with open("MetaData.txt", "r") as NEV :
+        gdown.download_folder(url)
+        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/FOTA-Version-Control-GSM/Metadata.txt", "r")
+        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/Metadata.txt", "r") as NEV :
             data = NEV.read()
             for line in data.split("\n"):
                 if line.startswith("version:"):
                     past_version = line.split(":")[1].strip()
                     break
             print("past version:", past_version)
-        #-------------------------------------------------------   
+
         Lines = f.readlines()
         for items in Lines:
             items = items.split(':')
@@ -108,15 +145,17 @@ class ThirdTabLoads(QWidget):
             elif items[0] == "filename":
                 name = items[1]
         print(current_version)
-        if current_version < past_version :
-            gdown.download_folder(url)
+        if int(current_version) > int(past_version) :
+            shutil.rmtree("Old_FOTA-Version-Control-GSM/")
+            os.rename("FOTA-Version-Control-GSM","Old_FOTA-Version-Control-GSM")
             msg1 = QMessageBox()
             msg1.setWindowTitle("Uploaded Suceesfully")
             msg1.setText(f"File {name} has been Downloaded successfully and saved the system")
             msg1.setIcon(QMessageBox.Information)
             msg1.exec_()
-            self.decrypt_file()
+            self.decrypt_file_GSM()
         else:
+            shutil.rmtree("FOTA-Version-Control-GSM/")
             msg2 = QMessageBox()
             msg2.setWindowTitle("Error")
             msg2.setText("There is no New versions available")
