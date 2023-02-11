@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self)
         self.config_button = QtWidgets.QPushButton("Configure", self)
+        
         ################################################################################################
         # Setup the UI main window
         ################################################################################################
