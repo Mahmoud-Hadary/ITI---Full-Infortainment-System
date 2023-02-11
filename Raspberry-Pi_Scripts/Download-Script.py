@@ -9,7 +9,7 @@ from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
 import binascii
 import base64
-import tkinter as tk
+import shutil
 from tkinter import filedialog
 
 class ThirdTabLoads(QWidget):
@@ -39,14 +39,20 @@ class ThirdTabLoads(QWidget):
             f.write(hex_file)
         print(f"File has been decrypted successfully and saved to {decrypted_file_path}")
 
-
+#shutil.rmtree(path, ignore_errors=False, onerror=None, *, dir_fd=None)
     def download_file(self):    
         url = 'https://drive.google.com/drive/folders/1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO?usp=share_link'
         current_version = 0
         gdown.download_folder(url)
-        f = open("FOTA-Version-Control/MetaData.txt", "r")
-        f_oldversion = open("FOTA-Version-Control/ITI_STM32F401CC_encryptedv5", "r")
-        past_version
+        f = open("FOTA-Version-Control-Main/Metadata.txt", "r")
+        with open("Old_FOTA-Version-Control-Main/Metadata.txt", "r") as NEV :
+            data = NEV.read()
+            for line in data.split("\n"):
+                if line.startswith("version:"):
+                    past_version = line.split(":")[1].strip()
+                    break
+            print("past version:", past_version)
+
         Lines = f.readlines()
         for items in Lines:
             items = items.split(':')
@@ -56,16 +62,17 @@ class ThirdTabLoads(QWidget):
             elif items[0] == "filename":
                 name = items[1]
         print(current_version)
-        if current_version > past_version :
-            gdown.download_folder(url)
+        if int(current_version) > int(past_version) :
+            shutil.rmtree("Old_FOTA-Version-Control-Main/")
+            os.rename("FOTA-Version-Control-Main","Old_FOTA-Version-Control-Main")
             msg1 = QMessageBox()
             msg1.setWindowTitle("Uploaded Suceesfully")
             msg1.setText(f"File {name} has been Downloaded successfully and saved the system")
             msg1.setIcon(QMessageBox.Information)
             msg1.exec_()
             self.decrypt_file()
-
         else:
+            shutil.rmtree("FOTA-Version-Control-Main/")
             msg2 = QMessageBox()
             msg2.setWindowTitle("Error")
             msg2.setText("There is no New versions available")
@@ -78,18 +85,20 @@ class ThirdTabLoads(QWidget):
         current_version = 0
         #------------------------------------------------------
         #change to download file
-        gdown.download(url, "MetaData.txt")
+        gdown.download(url, "MetaData.txt")         
+        f = open("FOTA-Version-Control-GSM/Metadata.txt", "r")
+
         #gdown.download_folder(url)
         
         #get past version then delete metadata
-        with open("MetaData.txt", "r") as f :
-            data = f.read()
+        with open("MetaData.txt", "r") as NEV :
+            data = NEV.read()
             for line in data.split("\n"):
                 if line.startswith("version:"):
                     past_version = line.split(":")[1].strip()
                     break
             print("past version:", past_version)
-        #--------------------------------------------------    
+        #-------------------------------------------------------   
         Lines = f.readlines()
         for items in Lines:
             items = items.split(':')
@@ -99,7 +108,7 @@ class ThirdTabLoads(QWidget):
             elif items[0] == "filename":
                 name = items[1]
         print(current_version)
-        if current_version > past_version :
+        if current_version < past_version :
             gdown.download_folder(url)
             msg1 = QMessageBox()
             msg1.setWindowTitle("Uploaded Suceesfully")
@@ -107,7 +116,6 @@ class ThirdTabLoads(QWidget):
             msg1.setIcon(QMessageBox.Information)
             msg1.exec_()
             self.decrypt_file()
-
         else:
             msg2 = QMessageBox()
             msg2.setWindowTitle("Error")
@@ -118,6 +126,7 @@ class ThirdTabLoads(QWidget):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = ThirdTabLoads()
-    w.download_file(0)
+    w.download_file()
+    #w.download_file_GSM()
     w.show()
     sys.exit(app.exec_())
