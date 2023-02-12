@@ -14,8 +14,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(823, 473)
+        MainWindow.setFixedSize(1500, 500)
         MainWindow.setStyleSheet("")
+        #Added
+
+        MainWindow.setStyleSheet("background-color: #E5F1F3;")
+
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
@@ -43,14 +48,17 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setMinimumSize(QtCore.QSize(300, 300))
-        self.widget.setMaximumSize(QtCore.QSize(600, 600))
+        self.widget.setMaximumSize(QtCore.QSize(1500, 500))
         self.widget.setBaseSize(QtCore.QSize(300, 300))
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
+        #self.frame.move(750,250)
+
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout.addWidget(self.widget)
         self.verticalLayout_2.addWidget(self.frame)
+        
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -59,4 +67,5 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ADAS Dashboard Window"))
+        
 from analoggaugewidget import AnalogGaugeWidget

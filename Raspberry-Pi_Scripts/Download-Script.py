@@ -3,14 +3,9 @@ from urllib.request import urlopen
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QLabel,QPushButton, QFileDialog,QMessageBox
 import os
-import re
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad
-import binascii
-import base64
 import shutil
-from tkinter import filedialog
 
 class ThirdTabLoads(QWidget):
     #Function to browse for an encrypted file and decrypt its content

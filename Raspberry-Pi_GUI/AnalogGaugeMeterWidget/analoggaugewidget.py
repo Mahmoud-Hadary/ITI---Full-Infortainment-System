@@ -215,7 +215,7 @@ class AnalogGaugeWidget(QWidget):
         ################################################################################################
         # SET DEFAULT THEME
         ################################################################################################
-        self.setGaugeTheme(24)
+        self.setGaugeTheme(50)
 
         ################################################################################################
         # RESIZE GAUGE
@@ -415,6 +415,15 @@ class AnalogGaugeWidget(QWidget):
                 color1="#3e2900",
                 color2="#7d5300",
                 color3="#ffaa00"
+            )
+
+            self.bigScaleMarker = Qt.white
+            self.fineScaleColor = Qt.white
+        elif Theme == 50:
+            self.setCustomGaugeTheme(
+                color1="#3a86ff",
+                color2="#8338ec",
+                color3="#ff006e"
             )
 
             self.bigScaleMarker = Qt.white
@@ -1126,7 +1135,6 @@ class AnalogGaugeWidget(QWidget):
     def draw_big_scaled_marker(self):
         my_painter = QPainter(self)
         my_painter.setRenderHint(QPainter.Antialiasing)
-        # Koordinatenursprung in die Mitte der Flaeche legen
         my_painter.translate(self.width() / 2, self.height() / 2)
 
         # my_painter.setPen(Qt.NoPen)
@@ -1151,7 +1159,6 @@ class AnalogGaugeWidget(QWidget):
         # painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        # Koordinatenursprung in die Mitte der Flaeche legen
         painter.translate(self.width() / 2, self.height() / 2)
         # painter.save()
         font = QFont(self.scale_fontname, self.scale_fontsize, QFont.Bold)
@@ -1194,7 +1201,6 @@ class AnalogGaugeWidget(QWidget):
         my_painter = QPainter(self)
 
         my_painter.setRenderHint(QPainter.Antialiasing)
-        # Koordinatenursprung in die Mitte der Flaeche legen
         my_painter.translate(self.width() / 2, self.height() / 2)
 
         my_painter.setPen(self.fineScaleColor)
