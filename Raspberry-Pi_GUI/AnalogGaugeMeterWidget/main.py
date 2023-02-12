@@ -1,6 +1,7 @@
 import os
 import sys
 import serial
+import RPi.GPIO as GPIO
 import tkinter as tk
 #from PyQt5.QtWidgets import * 
 from PyQt5 import QtCore
@@ -43,19 +44,19 @@ class MainWindow(QMainWindow):
     def decrypt_file(self):
         # open
         hex_file_name = None
-        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main"
+        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main"
         for file in os.listdir(directory):
             if file.startswith("ITI_STM32F401CC_encrypted"):
                 hex_file_name = file
                 print(hex_file_name)
                 break
 
-        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/"+str(hex_file_name)
+        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main/"+str(hex_file_name)
         with open(Fpath, "rb") as f:
             encrypted_file = f.read()
 
         # Open the secure file and read the key and IV
-        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/secure_key_and_iv.bin"    
+        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main/secure_key_and_iv.bin"    
         with open(secure_file_path, "rb") as f:
             secure_file = f.read()
         key = secure_file[:16]
@@ -69,7 +70,7 @@ class MainWindow(QMainWindow):
 
         # Save the decrypted data to a new file
         #decrypted_file_path = os.path.splitext(encrypted_file_path)[0] + "_decrypted.hex"
-        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/"+str(hex_file_name)+ "_decrypted.hex"
+        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main/"+str(hex_file_name)+ "_decrypted.hex"
         with open(Dpath, "wb") as f:
             f.write(hex_file)
         print(f"File has been decrypted successfully and saved")
@@ -77,19 +78,19 @@ class MainWindow(QMainWindow):
     def decrypt_file_GSM(self):
         # Open file dialog to select an encrypted file
         hex_file_name = None
-        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM"
+        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM"
         for file in os.listdir(directory):
             if file.startswith("ITI_STM32F401CC_GSM_encrypted"):
                 hex_file_name = file
                 print(hex_file_name)
                 break
 
-        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)
+        Fpath= "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)
         with open(Fpath, "rb") as f:
             encrypted_file = f.read()
 
         # Open the secure file and read the key and IV
-        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/secure_key_and_iv.bin"    
+        secure_file_path = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM/secure_key_and_iv.bin"    
         with open(secure_file_path, "rb") as f:
             secure_file = f.read()
         key = secure_file[:16]
@@ -103,7 +104,7 @@ class MainWindow(QMainWindow):
 
         # Save the decrypted data to a new file
         #decrypted_file_path = os.path.splitext(encrypted_file_path)[0] + "_decrypted.hex"
-        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)+ "_decrypted.hex"
+        Dpath = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM/"+str(hex_file_name)+ "_decrypted.hex"
         with open(Dpath, "wb") as f:
             f.write(hex_file)
         print(f"File has been decrypted successfully and saved")
@@ -113,8 +114,8 @@ class MainWindow(QMainWindow):
         url = 'https://drive.google.com/drive/folders/1jow0y1TiAY8OkjUaGkmhYM3jWm6RaWYO?usp=sharing'
         current_version = 0
         gdown.download_folder(url)
-        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/FOTA-Version-Control-Main/Metadata.txt", "r")
-        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-Main/Metadata.txt", "r") as NEV :
+        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/FOTA-Version-Control-Main/Metadata.txt", "r")
+        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main/Metadata.txt", "r") as NEV :
             data = NEV.read()
             for line in data.split("\n"):
                 if line.startswith("version:"):
@@ -153,8 +154,8 @@ class MainWindow(QMainWindow):
         url = 'https://drive.google.com/drive/folders/1KGUhNt6M64gnHKs3s68Umok8oSabzraZ?usp=share_link'
         current_version = 0
         gdown.download_folder(url)
-        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/FOTA-Version-Control-GSM/Metadata.txt", "r")
-        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_Scripts/Old_FOTA-Version-Control-GSM/Metadata.txt", "r") as NEV :
+        f = open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/FOTA-Version-Control-GSM/Metadata.txt", "r")
+        with open("/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM/Metadata.txt", "r") as NEV :
             data = NEV.read()
             for line in data.split("\n"):
                 if line.startswith("version:"):
@@ -193,52 +194,33 @@ class MainWindow(QMainWindow):
     #card number script
 ####################################################################################################
 ####################################################################################################
-    def initUI(self):
-        # Set the central widget to the subscribe button
-        central_widget = QtWidgets.QWidget()
-        self.setCentralWidget(central_widget)
-
-        layout = QtWidgets.QVBoxLayout()
-
-        title_label = QtWidgets.QLabel("<h1>Subscribe</h1>")
-        title_label.setAlignment(QtCore.Qt.AlignCenter)
-        layout.addWidget(title_label)
-
-        subscribe_button = QtWidgets.QPushButton("Subscribe", self)
-        subscribe_button.clicked.connect(self.open_card_number_window)
-        subscribe_button.setStyleSheet("background-color: #3498db; color: white; font-size: 20px; padding: 10px;")
-        layout.addWidget(subscribe_button, alignment=QtCore.Qt.AlignCenter)
-
-        central_widget.setLayout(layout)
-
-        self.card_number_window = None
+    
 
     def open_card_number_window(self):
-        if self.card_number_window is None:
-            self.card_number_window = QtWidgets.QWidget(self, QtCore.Qt.Window)
-            self.card_number_window.setWindowTitle("Card Number")
-            self.card_number_window.setGeometry(50, 50, 300, 200)
-            self.card_number_window.setWindowIcon(QtGui.QIcon("card.png"))  # set an icon for the window
+        self.card_number_window = QtWidgets.QWidget(self, QtCore.Qt.Window)
+        self.card_number_window.setWindowTitle("Card Number")
+        self.card_number_window.setGeometry(50, 50, 300, 200)
+        self.card_number_window.setWindowIcon(QtGui.QIcon("card.png"))  # set an icon for the window
 
-            layout = QtWidgets.QVBoxLayout()
-            layout.setAlignment(QtCore.Qt.AlignCenter)
+        layout = QtWidgets.QVBoxLayout()
+        layout.setAlignment(QtCore.Qt.AlignCenter)
 
-            card_number_label = QtWidgets.QLabel("<h2>Enter Card Number:</h2>")
-            layout.addWidget(card_number_label)
+        card_number_label = QtWidgets.QLabel("<h2>Enter Card Number:</h2>")
+        layout.addWidget(card_number_label)
 
-            self.card_number_input = QtWidgets.QLineEdit()
-            self.card_number_input.setStyleSheet("background-color: #ecf0f1; padding: 10px; font-size: 18px;")
-            layout.addWidget(self.card_number_input)
+        self.card_number_input = QtWidgets.QLineEdit()
+        self.card_number_input.setStyleSheet("background-color: #ecf0f1; padding: 10px; font-size: 18px;")
+        layout.addWidget(self.card_number_input)
 
-            self.check_button = QtWidgets.QPushButton("Check")
-            self.check_button.clicked.connect(self.check_card_number)
-            self.check_button.setStyleSheet("background-color: #3498db; color: white; font-size: 20px; padding: 10px; margin-top: 20px;")
-            layout.addWidget(self.check_button)
+        self.check_button = QtWidgets.QPushButton("Check")
+        self.check_button.clicked.connect(self.check_card_number)
+        self.check_button.setStyleSheet("background-color: #3498db; color: white; font-size: 20px; padding: 10px; margin-top: 20px;")
+        layout.addWidget(self.check_button)
 
-            self.result_label = QtWidgets.QLabel("")
-            self.result_label.setAlignment(QtCore.Qt.AlignCenter)
-            layout.addWidget(self.result_label)
-            self.card_number_window.setLayout(layout)
+        self.result_label = QtWidgets.QLabel("")
+        self.result_label.setAlignment(QtCore.Qt.AlignCenter)
+        layout.addWidget(self.result_label)
+        self.card_number_window.setLayout(layout)
 
         self.card_number_window.show()
 
@@ -255,8 +237,73 @@ class MainWindow(QMainWindow):
 
 
 
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(21,GPIO.OUT)
+    GPIO.output(21,GPIO.HIGH)
 
     #raspberry handler script
+    ser = serial.Serial('/dev/ttyS0', 9600, timeout=2)
+    root = tk.Tk()
+    root.title("Hex File Transfer")
+    # Function to send hex_records Raspberry -> STM
+    def send_hex_record(record):
+        # You send size of record to STM and tell stm the first one byte it will received size of each record (for example)	
+        # size = len(record)
+        ser.write( record.encode())
+        print(record)
+        # after STM Received each record it will send OK and raspberry will received it to send another Recode.....
+        response = ser.read(2).decode() 
+        #response = ser.read(ser.inWaiting).decode()
+        print(response)
+        #check if Rasp received another thing it will raise error
+    
+        if response != 'ok':
+                print('Error:', response)
+                
+        #  Show Communication between STM , Raspberry
+        display.insert(tk.END, "Sent: " + record)
+        display.insert(tk.END, "Received: " + response + "\n")
+        return response
+        # Read the hex file
+    try:
+        with open('ITI_STM32F401CC.hex', 'r') as f:
+                hex_file = f.readlines()
+    except FileNotFoundError:
+                print("Error: Hex file not found.")
+    
+                exit()
+
+    display = tk.Text(root, height=20, width=80)
+    display.pack()
+    GPIO.output(21,GPIO.LOW)
+
+
+    # Send each record, its size, and check for receipt
+    for record in hex_file:
+    #if record[7:9] == "01":
+     #  break
+       # flag=1
+        # End-of-file (EOF) record received
+        # EOF record identified by the record type in the eighth and ninth position of the hex record being equal to "01". 
+       # if you want to do thing
+    
+        try:
+                check =send_hex_record(record)
+        #if flag == 1:
+         # break
+        except Exception as e:
+                display.insert(tk.END, str(e) + "\n")
+                display.insert(tk.END, "Transfer failed.\n")
+                break
+        else:
+        # If All File Transferred Successfully
+                if check == "ok":
+                        display.insert(tk.END, "Transfer * successful.\n")
+                else:
+                        print("waiting")
+        ser.close()
+        root.mainloop()
+
 
 
 
@@ -269,27 +316,11 @@ class MainWindow(QMainWindow):
         ################################################################################################
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.Updates = QtWidgets.QPushButton("Check For Updates", self)
-        self.False_Alarm = QtWidgets.QPushButton("False Alarm", self)
-        self.Sub = QtWidgets.QPushButton("Subscribe", self)
-        self.Flash = QtWidgets.QPushButton("Flash", self)
-
-        if Sub == False:
-            self.Updates.clicked.connect(self.download_file)   
-        else:
-            self.Updates.clicked.connect(self.download_file_GSM)   
-
-        self.Sub.clicked.connect(self.initUI)
-        self.Flash.click.connect(self.)
-
-        self.Flash.move(1300,215)
-        self.Updates.move(1300, 50)
-        self.Sub.move(1300, 380)
-        self.False_Alarm.move(80, 240)
-        self.Sub.hide()
-        self.Updates.hide()
-        self.False_Alarm.hide()
-        self.Flash.hide()
+        
+        #self.Sub.hide()
+        #self.Updates.hide()
+        #self.False_Alarm.hide()
+        #self.Flash.hide()
 
         #effect = QtWidgets.QGraphicsBlurEffect()
         #effect.setBlurRadius(4)
@@ -373,29 +404,49 @@ class MainWindow(QMainWindow):
         self.Panim_group.start()
         #self.anim_group.start()
 
+        self.Updates = QtWidgets.QPushButton("Check For Updates", self)
+        self.False_Alarm = QtWidgets.QPushButton("False Alarm", self)
+        self.Sub = QtWidgets.QPushButton("Subscribe", self)
+        self.Flash = QtWidgets.QPushButton("Flash", self)
+        self.Updates.setStyleSheet("background : transparent;border : 0;color: white;")
+        self.Updates.resize(160,50)
+        self.False_Alarm.setStyleSheet("background : transparent;border : 0;color: white;")
+        self.Sub.setStyleSheet("background : transparent;border : 0;color: white;")
+        self.Flash.setStyleSheet("background : transparent;border : 0;color: white;")
+        if Sub == False:
+            self.Updates.clicked.connect(self.download_file)   
+        else:
+            self.Updates.clicked.connect(self.download_file_GSM)   
 
+        self.Sub.clicked.connect(self.open_card_number_window)
+        self.Flash.click.connect(self.send_hex_record)
 
-        self.Label_Updates = QLabel('Check For Updates', self)
+        self.Flash.move(1325,225)
+        self.Updates.move(1295, 50)
+        self.Sub.move(1325, 390)
+        self.False_Alarm.move(75, 225)
+
+        '''self.Label_Updates = QLabel('Check For Updates', self)
         self.Label_Updates.resize(160, 50)
         self.Label_Updates.setStyleSheet("background-color: transparent;color: white;font-size: 12pt;")
-        self.Label_Updates.move(1310,50)
+        self.Label_Updates.move(1310,50)'''
 
-        self.Label_Sub = QLabel('Subscribe', self)
+        '''self.Label_Sub = QLabel('Subscribe', self)
         self.Label_Sub.setStyleSheet("background-color: transparent;color: white;font-size: 12pt;")
         self.Label_Sub.move(1340,380)
-        self.Label_Sub.resize(160, 50)
+        self.Label_Sub.resize(160, 50)'''
 
 
-        self.Label_Flash = QLabel('Flash Update', self)
+        '''self.Label_Flash = QLabel('Flash Update', self)
         self.Label_Flash.setStyleSheet("background-color: transparent;color: white;font-size: 12pt;")
         self.Label_Flash.move(1330,215)
-        self.Label_Flash.resize(160, 50)
+        self.Label_Flash.resize(160, 50)'''
 
 
-        self.Label_Flash = QLabel('False Alarm', self)
+        '''self.Label_Flash = QLabel('False Alarm', self)
         self.Label_Flash.setStyleSheet("background-color: transparent;color: white;font-size: 12pt;")
         self.Label_Flash.move(80,215)
-        self.Label_Flash.resize(160, 50)
+        self.Label_Flash.resize(160, 50)'''
 
     
         ################################################################################################
