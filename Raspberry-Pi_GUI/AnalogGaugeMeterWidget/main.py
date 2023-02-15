@@ -420,7 +420,7 @@ class MainWindow(QMainWindow):
         #self.child.setGraphicsEffect(effect)
         self.anim = QPropertyAnimation(self.child, b"pos")
         self.anim.setEasingCurve(QEasingCurve.InOutCubic)
-        self.anim.setEndValue(QPoint(1300, 50))
+        self.anim.setEndValue(QPoint(800, 50))
         self.anim.setDuration(1500)
         self.anim_2 = QPropertyAnimation(self.child, b"size")
         self.anim_2.setEndValue(QSize(150, 50))
@@ -428,27 +428,13 @@ class MainWindow(QMainWindow):
         self.anim_group = QSequentialAnimationGroup()
         self.Panim_group = QParallelAnimationGroup()
 
-
-        self.child_False = QWidget(self)
-        self.child_False.setStyleSheet("background-color:#6665DD;border-radius:15px;")
-        self.child_False.resize(10, 10)
-        #self.child.setGraphicsEffect(effect)
-        self.anim_False = QPropertyAnimation(self.child_False, b"pos")
-        self.anim_False.setEasingCurve(QEasingCurve.InOutCubic)
-        self.anim_False.setEndValue(QPoint(50, 215))
-        self.anim_False.setDuration(1500)
-        self.anim_False_2 = QPropertyAnimation(self.child_False, b"size")
-        self.anim_False_2.setEndValue(QSize(150, 50))
-        self.anim_False_2.setDuration(1000)
-
-
         self.child_Flash = QWidget(self)
         self.child_Flash.setStyleSheet("background-color:#6665DD;border-radius:15px;")
         self.child_Flash.resize(10, 10)
         #self.child_Flash.setGraphicsEffect(effect)
         self.anim_flash = QPropertyAnimation(self.child_Flash, b"pos")
         self.anim_flash.setEasingCurve(QEasingCurve.InOutCubic)
-        self.anim_flash.setEndValue(QPoint(1300, 215))
+        self.anim_flash.setEndValue(QPoint(800, 215))
         self.anim_flash.setDuration(1500)
         self.anim_flash_2 = QPropertyAnimation(self.child_Flash, b"size")
         self.anim_flash_2.setEndValue(QSize(150, 50))
@@ -460,7 +446,7 @@ class MainWindow(QMainWindow):
         self.child2.resize(10, 10)
         self.anim2 = QPropertyAnimation(self.child2, b"pos")
         self.anim2.setEasingCurve(QEasingCurve.InOutCubic)
-        self.anim2.setEndValue(QPoint(1300, 380))
+        self.anim2.setEndValue(QPoint(800, 380))
         self.anim2.setDuration(1500)
         self.anim_3 = QPropertyAnimation(self.child2, b"size")
         self.anim_3.setEndValue(QSize(150, 50))
@@ -478,7 +464,7 @@ class MainWindow(QMainWindow):
         self.child.setGraphicsEffect(effect)
         self.child_Flash.setGraphicsEffect(effect1)
         self.child2.setGraphicsEffect(effect2)
-        self.child_False.setGraphicsEffect(effect3)
+
 
 
         self.Panim_group.addAnimation(self.anim)
@@ -487,19 +473,16 @@ class MainWindow(QMainWindow):
         self.Panim_group.addAnimation(self.anim_3)
         self.Panim_group.addAnimation(self.anim_flash)
         self.Panim_group.addAnimation(self.anim_flash_2)
-        self.Panim_group.addAnimation(self.anim_False)
-        self.Panim_group.addAnimation(self.anim_False_2)
+
 
         self.Panim_group.start()
         #self.anim_group.start()
 
         self.Updates = QtWidgets.QPushButton("Check For Updates", self)
-        self.False_Alarm = QtWidgets.QPushButton("False Alarm", self)
         self.Sub = QtWidgets.QPushButton("Subscribe", self)
         self.Flash = QtWidgets.QPushButton("Flash", self)
         self.Updates.setStyleSheet("background : transparent;border : 0;color: white;")
         self.Updates.resize(160,50)
-        self.False_Alarm.setStyleSheet("background : transparent;border : 0;color: white;")
         self.Sub.setStyleSheet("background : transparent;border : 0;color: white;")
         self.Flash.setStyleSheet("background : transparent;border : 0;color: white;")
         if Sub == False:
@@ -513,7 +496,6 @@ class MainWindow(QMainWindow):
         self.Flash.move(1325,225)
         self.Updates.move(1295, 50)
         self.Sub.move(1325, 390)
-        self.False_Alarm.move(75, 225)
 
         '''self.Label_Updates = QLabel('Check For Updates', self)
         self.Label_Updates.resize(160, 50)
