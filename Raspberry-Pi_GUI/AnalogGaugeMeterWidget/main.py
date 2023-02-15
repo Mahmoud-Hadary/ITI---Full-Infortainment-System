@@ -1,8 +1,9 @@
 import os
 import sys
 import serial
+import time
 import RPi.GPIO as GPIO
-import tkinter as tk
+#import tkinter as tk
 #from PyQt5.QtWidgets import * 
 from PyQt5 import QtCore
 from PyQt5.QtGui import * 
@@ -19,9 +20,16 @@ import shutil
 
 
 
-ser = serial.Serial('/dev/ttyS0', 9600, timeout=2)
-root = tk.Tk()
-root.title("Hex File Transfer")
+
+
+
+
+
+
+
+
+
+
 
 
 ################################################################################################
@@ -199,7 +207,7 @@ class MainWindow(QMainWindow):
     def open_card_number_window(self):
         self.card_number_window = QtWidgets.QWidget(self, QtCore.Qt.Window)
         self.card_number_window.setWindowTitle("Card Number")
-        self.card_number_window.setGeometry(50, 50, 300, 200)
+        self.card_number_window.setGeometry(50, 50, 500, 350)
         self.card_number_window.setWindowIcon(QtGui.QIcon("card.png"))  # set an icon for the window
 
         layout = QtWidgets.QVBoxLayout()
@@ -209,20 +217,87 @@ class MainWindow(QMainWindow):
         layout.addWidget(card_number_label)
 
         self.card_number_input = QtWidgets.QLineEdit()
-        self.card_number_input.setStyleSheet("background-color: #ecf0f1; padding: 10px; font-size: 18px;")
+        self.card_number_input.setStyleSheet("background-color: #ecf0f1; padding: 10px; font-size: 18px; border-radius: 10px;")
         layout.addWidget(self.card_number_input)
 
         self.check_button = QtWidgets.QPushButton("Check")
         self.check_button.clicked.connect(self.check_card_number)
-        self.check_button.setStyleSheet("background-color: #3498db; color: white; font-size: 20px; padding: 10px; margin-top: 20px;")
+        self.check_button.setStyleSheet("background-color: #3498db; color: white; font-size: 20px; padding: 10px; margin-top: 20px; border-radius: 10px;")
         layout.addWidget(self.check_button)
 
         self.result_label = QtWidgets.QLabel("")
         self.result_label.setAlignment(QtCore.Qt.AlignCenter)
         layout.addWidget(self.result_label)
-        self.card_number_window.setLayout(layout)
 
+        numbers_layout = QtWidgets.QGridLayout()
+
+        button1 = QtWidgets.QPushButton("1")
+        button1.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "1"))
+        button1.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button1, 0, 0)
+
+        button2 = QtWidgets.QPushButton("2")
+        button2.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "2"))
+        button2.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button2, 0, 1)
+
+        button3 = QtWidgets.QPushButton("3")
+        button3.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "3"))
+        button3.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button3, 0, 2)
+            
+        button4 = QtWidgets.QPushButton("4")
+        button4.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "4"))
+        button4.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button4, 1, 0)
+
+        button5 = QtWidgets.QPushButton("5")
+        button5.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "5"))
+        button5.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button5, 1, 1)
+
+        button6 = QtWidgets.QPushButton("6")
+        button6.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "6"))
+        button6.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button6, 1, 2)
+
+        button7 = QtWidgets.QPushButton("7")
+        button7.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "7"))
+        button7.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button7, 2, 0)
+
+        button8 = QtWidgets.QPushButton("8")
+        button8.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "8"))
+        button8.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button8, 2, 1)
+
+        button9 = QtWidgets.QPushButton("9")
+        button9.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "9"))
+        button9.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button9, 2, 2)
+
+        button0 = QtWidgets.QPushButton("0")
+        button0.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text() + "0"))
+        button0.setStyleSheet("background-color: #ecf0f1; color: #3498db; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(button0, 3, 1)
+
+        clear_button = QtWidgets.QPushButton("Clear")
+        clear_button.clicked.connect(lambda: self.card_number_input.setText(""))
+        clear_button.setStyleSheet("background-color: #e74c3c; color: #ecf0f1; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(clear_button, 3, 0)
+
+        back_button = QtWidgets.QPushButton("<-")
+        back_button.clicked.connect(lambda: self.card_number_input.setText(self.card_number_input.text()[:-1]))
+        back_button.setStyleSheet("background-color: #e74c3c; color: #ecf0f1; font-size: 20px; padding: 10px; margin: 5px; border-radius: 10px;")
+        numbers_layout.addWidget(back_button, 3, 2)
+        layout.addLayout(numbers_layout)
+        
+        self.card_number_window.setLayout(layout)
         self.card_number_window.show()
+        
+        
+
+
 
     def check_card_number(self):
         global Sub
@@ -235,74 +310,88 @@ class MainWindow(QMainWindow):
         else:
             self.result_label.setText("<h3 style='color: red;'>Invalid Card Number</h3>")
 
-
-
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(21,GPIO.OUT)
-    GPIO.output(21,GPIO.HIGH)
-
-    #raspberry handler script
-    ser = serial.Serial('/dev/ttyS0', 9600, timeout=2)
-    root = tk.Tk()
-    root.title("Hex File Transfer")
-    # Function to send hex_records Raspberry -> STM
-    def send_hex_record(record):
-        # You send size of record to STM and tell stm the first one byte it will received size of each record (for example)	
-        # size = len(record)
-        ser.write( record.encode())
-        print(record)
-        # after STM Received each record it will send OK and raspberry will received it to send another Recode.....
-        response = ser.read(2).decode() 
-        #response = ser.read(ser.inWaiting).decode()
-        print(response)
-        #check if Rasp received another thing it will raise error
-    
-        if response != 'ok':
-                print('Error:', response)
+        
+    def Flash_Event(self):
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setwarnings(False)
+            GPIO.setup(21,GPIO.OUT)
+            GPIO.output(21,GPIO.HIGH)
+            ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=2)
+            #root = tk.Tk()
+            #root.title("Hex File Transfer")
+            def send_hex_record(record):
+                # You send size of record to STM and tell stm the first one byte it will received size of each record (for example)	
+               # size = len(record)
+                ser.write( record.encode())
+                print(record)
+                # after STM Received each record it will send OK and raspberry will received it to send another Recode.....
+                response = ser.read(2).decode() 
+                #response = ser.read(ser.inWaiting).decode()
+                print(response)
+                # check if Rasp received another thing it will raise error
                 
-        #  Show Communication between STM , Raspberry
-        display.insert(tk.END, "Sent: " + record)
-        display.insert(tk.END, "Received: " + response + "\n")
-        return response
-        # Read the hex file
-    try:
-        with open('ITI_STM32F401CC.hex', 'r') as f:
-                hex_file = f.readlines()
-    except FileNotFoundError:
+                if response != 'ok':
+                    print('Error:', response)
+                            
+                #  Show Communication between STM , Raspberry
+                #display.insert(tk.END, "Sent: " + record)
+                #display.insert(tk.END, "Received: " + response + "\n")
+                return response
+            # Read the hex file
+            try:
+                hex_file_name = None
+                hex_file_path = None
+                if Sub == False : 
+                        
+                        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-Main"
+                elif Sub == True : 
+                        directory = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Old_FOTA-Version-Control-GSM"
+                for file in os.listdir(directory):
+                        if file.endswith("decrypted.hex"):
+                                hex_file_name = file
+                                print(hex_file_name)
+                                break   
+                hex_file_path = directory+'/'+hex_file_name                         
+                with open(hex_file_path, 'r') as f:
+                    hex_file = f.readlines()
+            except FileNotFoundError:
                 print("Error: Hex file not found.")
-    
+                
                 exit()
 
-    display = tk.Text(root, height=20, width=80)
-    display.pack()
-    GPIO.output(21,GPIO.LOW)
+            #display = tk.Text(root, height=20, width=80)
+            #display.pack()
+            time.sleep(1)
+            GPIO.output(21,GPIO.LOW)
 
-
-    # Send each record, its size, and check for receipt
-    for record in hex_file:
-    #if record[7:9] == "01":
-     #  break
-       # flag=1
-        # End-of-file (EOF) record received
-        # EOF record identified by the record type in the eighth and ninth position of the hex record being equal to "01". 
-       # if you want to do thing
-    
-        try:
-                check =send_hex_record(record)
-        #if flag == 1:
-         # break
-        except Exception as e:
-                display.insert(tk.END, str(e) + "\n")
-                display.insert(tk.END, "Transfer failed.\n")
-                break
-        else:
-        # If All File Transferred Successfully
-                if check == "ok":
-                        display.insert(tk.END, "Transfer * successful.\n")
+            # Send each record, its size, and check for receipt
+            for record in hex_file:
+                #if record[7:9] == "01":
+                 #  break
+                   # flag=1
+                    # End-of-file (EOF) record received
+                    # EOF record identified by the record type in the eighth and ninth position of the hex record being equal to "01". 
+                   # if you want to do thing
+                
+                try:
+                    check =send_hex_record(record)
+                    #if flag == 1:
+                     # break
+                except Exception as e:
+                    #display.insert(tk.END, str(e) + "\n")
+                    #display.insert(tk.END, "Transfer failed.\n")
+                    print("Transfer * failed.\n") 
+                    break
                 else:
+                # If All File Transferred Successfully
+                    if check == "ok":
+                        print("Transfer * successful.\n")    
+                        #display.insert(tk.END, "Transfer * successful.\n")
+                    else:
                         print("waiting")
-        ser.close()
-        root.mainloop()
+            ser.close()
+            #root.mainloop()   
+    
 
 
 
@@ -419,7 +508,7 @@ class MainWindow(QMainWindow):
             self.Updates.clicked.connect(self.download_file_GSM)   
 
         self.Sub.clicked.connect(self.open_card_number_window)
-        self.Flash.click.connect(self.send_hex_record)
+        self.Flash.clicked.connect(self.Flash_Event)
 
         self.Flash.move(1325,225)
         self.Updates.move(1295, 50)

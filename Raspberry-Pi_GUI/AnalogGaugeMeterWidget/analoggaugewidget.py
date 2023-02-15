@@ -7,6 +7,9 @@ import os
 import sys
 import math
 import random
+import time
+import serial
+
 
 try:
     from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication
@@ -35,7 +38,7 @@ class AnalogGaugeWidget(QWidget):
         super(AnalogGaugeWidget, self).__init__(parent)
         
         
-
+        self.counter = 0
         ################################################################################################
         # DEFAULT TIMER VALUE
         ################################################################################################
@@ -1467,7 +1470,24 @@ class AnalogGaugeWidget(QWidget):
     
                 
     def updateValueByVariable(self):
-        self.heart_rate = random.randint(50, 150)
+        
+        self.counter = self.counter + 1
+        ser = serial.Serial('/dev/ttyUSB0', 9600,timeout=1)
+    
+        # if you want to store heart rate data in excel file in example use this
+        heart_rate_readings = []
+        reading = ser.read(2).decode().strip()
+        if self.counter == 1 or reading.isdigit()==False : 
+            self.heart_rate = 40 
+        else:   
+            self.heart_rate = int(reading)
+                
+                
+            #heart_rate_readings.append(heart_rate)
+            print("Heart rate: {} bpm".format(self.heart_rate))
+            #time you need between readings            
+            #self.heart_rate = random.randint(50, 150)
+    
         self.updateValue(self.heart_rate, mouse_controlled=False) 
         
         
