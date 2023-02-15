@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setFixedSize(1500, 500)
+        MainWindow.setFixedSize(1030, 520)
         MainWindow.setStyleSheet("")
         #Added
 
@@ -48,7 +48,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setMinimumSize(QtCore.QSize(300, 300))
-        self.widget.setMaximumSize(QtCore.QSize(1500, 500))
+        self.widget.setMaximumSize(QtCore.QSize(1030, 500))
         self.widget.setBaseSize(QtCore.QSize(300, 300))
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")

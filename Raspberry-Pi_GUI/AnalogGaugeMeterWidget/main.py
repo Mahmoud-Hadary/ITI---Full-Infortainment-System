@@ -493,9 +493,9 @@ class MainWindow(QMainWindow):
         self.Sub.clicked.connect(self.open_card_number_window)
         self.Flash.clicked.connect(self.Flash_Event)
 
-        self.Flash.move(1325,225)
-        self.Updates.move(1295, 50)
-        self.Sub.move(1325, 390)
+        self.Flash.move(825,225)
+        self.Updates.move(795, 50)
+        self.Sub.move(825, 390)
 
         '''self.Label_Updates = QLabel('Check For Updates', self)
         self.Label_Updates.resize(160, 50)
