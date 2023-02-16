@@ -1,0 +1,24 @@
+1 - Install the necessary software packages:
+sudo apt-get update
+sudo apt-get install xserver-xorg x11-xserver-utils xinit
+sudo apt-get install matchbox-window-manager
+
+2- Create a new file called autostart in the ~/.config/lxsession/LXDE-pi/ directory:
+mkdir -p ~/.config/lxsession/LXDE-pi/
+nano ~/.config/lxsession/LXDE-pi/autostart
+
+3- Add the following lines to the autostart file:
+@xset s off
+@xset -dpms
+@xset s noblank
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@python3 /home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/main.py
+
+4 - Save and close the autostart file.
+
+5- reboot raspberry pi
+reboot
+
+
+
