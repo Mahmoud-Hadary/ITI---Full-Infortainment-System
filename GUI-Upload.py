@@ -19,7 +19,7 @@ import base64
 coloumn_count = 0
 def Delete_Key(Gfilename):
     """
-    Deletes a file with a given name from Google Drive.
+    Deletes an encrypted key file that will be used to decrypt the Main Application with a given name from Google Drive.
 
     Args:
         Gfilename (str): The name of the file to delete.
@@ -52,7 +52,7 @@ def Delete_Key(Gfilename):
 
 def Delete_Key_GSM(Gfilename):
     """
-    Deletes a file with a given name from GSM Google Drive Folder.
+    Deletes an encrypted key file that will be used to decrypt the GSM Application with a given name from Google Drive.
 
     Args:
         Gfilename (str): The name of the file to delete.
@@ -419,8 +419,8 @@ class ThirdTabLoads(QWidget):
 
     def upload_file(self):
         """
-        Uploads a file to Google Drive if it is a newer version than the currently stored file.
-        
+        Uploads a file to Google Drive using QFileDialog after encrypts it if it is a newer version than the currently stored file.
+         
         Args:
             self: an instance of the class
 
@@ -527,6 +527,7 @@ class ThirdTabLoads(QWidget):
         sourceFile = sourceFolder + '/' + filename
         print("This is the source file " + sourceFile)
         
+        # Get the folder to upload to in Google Drive
         folder = searchFolder(Google_DriveFolder_GSM)
         version = int(file_type[1].split('.')[0])
         old_version = searchFile_GSM("ITI_STM32F401CC_GSM_encrypted")
