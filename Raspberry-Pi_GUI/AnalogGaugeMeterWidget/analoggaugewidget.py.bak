@@ -7,6 +7,9 @@ import os
 import sys
 import math
 import random
+import time
+import serial
+
 
 try:
     from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication
@@ -35,7 +38,7 @@ class AnalogGaugeWidget(QWidget):
         super(AnalogGaugeWidget, self).__init__(parent)
         
         
-
+        self.counter = 0
         ################################################################################################
         # DEFAULT TIMER VALUE
         ################################################################################################
@@ -164,7 +167,7 @@ class AnalogGaugeWidget(QWidget):
         ################################################################################################
         # ENABLE BAR GRAPH BY DEFAULT
         ################################################################################################
-        self.setEnableBarGraph(True)
+        self.setEnableBarGraph(False)
         ################################################################################################
         # FILL POLYGON COLOR BY DEFAULT
         ################################################################################################
@@ -201,10 +204,6 @@ class AnalogGaugeWidget(QWidget):
         ################################################################################################
         self.units = "BPM"
 
-        # QTimer sorgt für neu Darstellung alle X ms
-        # evtl performance hier verbessern mit self.update() und self.use_timer_event = False
-        # todo: self.update als default ohne ueberpruefung, ob self.use_timer_event gesetzt ist oder nicht
-        # Timer startet alle 10ms das event paintEvent
         if self.use_timer_event:
             timer = QTimer(self)
             timer.timeout.connect(self.updateValueByVariable)
@@ -215,7 +214,7 @@ class AnalogGaugeWidget(QWidget):
         ################################################################################################
         # SET DEFAULT THEME
         ################################################################################################
-        self.setGaugeTheme(12)
+        self.setGaugeTheme(50)
 
         ################################################################################################
         # RESIZE GAUGE
@@ -415,6 +414,15 @@ class AnalogGaugeWidget(QWidget):
                 color1="#3e2900",
                 color2="#7d5300",
                 color3="#ffaa00"
+            )
+
+            self.bigScaleMarker = Qt.white
+            self.fineScaleColor = Qt.white
+        elif Theme == 50:
+            self.setCustomGaugeTheme(
+                color1="#3a86ff",
+                color2="#8338ec",
+                color3="#ff006e"
             )
 
             self.bigScaleMarker = Qt.white
@@ -1126,7 +1134,6 @@ class AnalogGaugeWidget(QWidget):
     def draw_big_scaled_marker(self):
         my_painter = QPainter(self)
         my_painter.setRenderHint(QPainter.Antialiasing)
-        # Koordinatenursprung in die Mitte der Flaeche legen
         my_painter.translate(self.width() / 2, self.height() / 2)
 
         # my_painter.setPen(Qt.NoPen)
@@ -1151,7 +1158,6 @@ class AnalogGaugeWidget(QWidget):
         # painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        # Koordinatenursprung in die Mitte der Flaeche legen
         painter.translate(self.width() / 2, self.height() / 2)
         # painter.save()
         font = QFont(self.scale_fontname, self.scale_fontsize, QFont.Bold)
@@ -1194,7 +1200,6 @@ class AnalogGaugeWidget(QWidget):
         my_painter = QPainter(self)
 
         my_painter.setRenderHint(QPainter.Antialiasing)
-        # Koordinatenursprung in die Mitte der Flaeche legen
         my_painter.translate(self.width() / 2, self.height() / 2)
 
         my_painter.setPen(self.fineScaleColor)
@@ -1461,8 +1466,25 @@ class AnalogGaugeWidget(QWidget):
     
                 
     def updateValueByVariable(self):
-        self.heart_rate = random.randint(50, 150)
-        self.updateValue(new_value, mouse_controlled=False) 
+        
+        self.counter = self.counter + 1
+        ser = serial.Serial('/dev/ttyUSB0', 9600,timeout=1)
+    
+        # if you want to store heart rate data in excel file in example use this
+        heart_rate_readings = []
+        reading = ser.read(2).decode().strip()
+        if self.counter == 1 or reading.isdigit()==False : 
+            self.heart_rate = 40 
+        else:   
+            self.heart_rate = int(reading)
+                
+                
+            #heart_rate_readings.append(heart_rate)
+            print("Heart rate: {} bpm".format(self.heart_rate))
+            #time you need between readings            
+            #self.heart_rate = random.randint(50, 150)
+    
+        self.updateValue(self.heart_rate, mouse_controlled=False) 
         
         
                 

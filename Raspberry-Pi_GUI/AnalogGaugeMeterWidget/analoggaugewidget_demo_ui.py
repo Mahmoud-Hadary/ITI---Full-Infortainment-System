@@ -10,37 +10,56 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        """
+        Sets up the UI for the main window.
+
+        Args :
+            self: an instance of the class
+            MainWindow: The main window to set up.
+            
+        """
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(1030, 520)
-        MainWindow.setStyleSheet("")
-        #Added
-
         MainWindow.setStyleSheet("background-color: #E5F1F3;")
-
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
+
+        # Set up a vertical layout for the central widget
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
+        # Set up a frame to hold the gauge widget
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setObjectName("frame")
+
+        # Set up a vertical layout for the frame
         self.verticalLayout = QtWidgets.QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        # Set up a frame to hold the gauge widget
         self.frame_2 = QtWidgets.QFrame(self.frame)
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
+
+        # Set up a vertical layout for the second frame
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.frame_2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
+
+        # Set up a font for the title of the gauge widget
         font = QtGui.QFont()
         font.setPointSize(30)
         font.setBold(True)
         font.setWeight(75)
+
+        # Add the title frame to the vertical layout
         self.verticalLayout.addWidget(self.frame_2)
+
+        # Create the gauge widget and set its size policy and maximum size
         self.widget = AnalogGaugeWidget(self.frame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
@@ -52,20 +71,39 @@ class Ui_MainWindow(object):
         self.widget.setBaseSize(QtCore.QSize(300, 300))
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
-        #self.frame.move(750,250)
 
+        # Set up a horizontal layout for the gauge widget
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout.setObjectName("horizontalLayout")
+
+        # Add the gauge widget to the vertical layout
         self.verticalLayout.addWidget(self.widget)
+
+        # Add the frame to the central widget's vertical layout
         self.verticalLayout_2.addWidget(self.frame)
-        
+
+        # Set the central widget for the main window
         MainWindow.setCentralWidget(self.centralwidget)
 
+        # Set up translations for the main window
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        # Set up attributes for some of the widgets
+        self.MainWindow = MainWindow
+        self.frame = frame
+        self.widget = widget
+
     def retranslateUi(self, MainWindow):
+        """
+        Translates the UI for the main window.
+
+        Args :
+            self: an instance of the class
+            MainWindow: The main window to translate.
+        """
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ADAS Dashboard Window"))
-        
+
+# Import the analog gauge widget
 from analoggaugewidget import AnalogGaugeWidget

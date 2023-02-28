@@ -48,12 +48,12 @@ class MainWindow(QMainWindow):
 
     def decrypt_file(self):
         """
-        This function decrypts an encrypted file using AES-ECB mode and a key and IV read from another secure file. The function performs the following steps:
+        This function decrypts an encrypted file using AES-CBC mode and a key and IV read from another secure file. The function performs the following steps:
 
         1. Searches for an encrypted file with a specific name in a directory.
         2. Reads the encrypted file.
         3. Reads the secure file containing the key and IV.
-        4. Creates a new AES-ECB cipher using the key and IV.
+        4. Creates a new AES-CBC cipher using the key and IV.
         5. Decrypts the encrypted file using the cipher.
         6. Saves the decrypted data to a new file.
 
@@ -101,12 +101,17 @@ class MainWindow(QMainWindow):
         if len(key) != 16 or len(iv) != 16:
             raise ValueError("Key and IV must be 16 bytes each")
         
-        # Step 5: Create a new AES-ECB cipher and decrypt the encrypted file
-        cipher = AES.new(key, AES.MODE_ECB)
+        # Step 5: Create a new AES-CBC cipher and decrypt the encrypted file
+        cipher = AES.new(key, AES.MODE_CBC, iv=iv)
         try:
             hex_file = cipher.decrypt(encrypted_file)
         except Crypto.Error as e:
             raise Crypto.Error("Error decrypting file") from e
+            
+        # Remove the padding
+        pad_len = hex_file[-1]
+        plaintext = hex_file[:-pad_len]
+        
         
         # Step 6: Save the decrypted data to a new file
         Dpath = os.path.join(directory, f"{hex_file_name}_decrypted.hex")
@@ -118,15 +123,15 @@ class MainWindow(QMainWindow):
 
     def decrypt_file_GSM(self):
         """
-        This function finds an GSM encrypted file in a specified directory and decrypts it using AES-ECB mode and a key and IV read from another secure file.
+        This function finds an GSM encrypted file in a specified directory and decrypts it using AES-CBC mode and a key and IV read from another secure file.
         The function performs the following steps:
 
         1. Searches for a GSM encrypted file with a specific name in a directory.
         2. Reads the encrypted file.
         3. Reads the secure file containing the key and IV.
-        4. Creates a new AES-ECB cipher using the key and IV.
+        4. Creates a new AES-CBC cipher using the key and IV.
         5. Decrypts the encrypted file using the cipher.
-        6. Saves the decrypted data to a new file.        
+        6. Saves the decrypted data to a new file.
 
         Args:
             self: An instance of the class.
@@ -147,8 +152,8 @@ class MainWindow(QMainWindow):
             if file.startswith("ITI_STM32F401CC_GSM_encrypted"):
                 hex_file_name = file
                 print(hex_file_name)
-                break          
-                
+                break
+
         # Check if the encrypted file was found
         if hex_file_name is None:
             raise FileNotFoundError("Encrypted file not found in directory")
@@ -157,33 +162,38 @@ class MainWindow(QMainWindow):
         Fpath = os.path.join(directory, hex_file_name)
         with open(Fpath, "rb") as f:
             encrypted_file = f.read()
-        
+
         # Step 3: Read the secure file containing the key and IV
         secure_file_path = os.path.join(directory, "secure_key_and_iv.bin")
         with open(secure_file_path, "rb") as f:
             secure_file = f.read()
-        
+
         # Step 4: Get the key and IV
         key = secure_file[:16]
         iv = secure_file[16:]
-        
+
         # Check if the length of the key and IV is correct
         if len(key) != 16 or len(iv) != 16:
             raise ValueError("Key and IV must be 16 bytes each")
-        
-        # Step 5: Create a new AES-ECB cipher and decrypt the encrypted file
-        cipher = AES.new(key, AES.MODE_ECB)
+
+        # Step 5: Create a new AES-CBC cipher and decrypt the encrypted file
+        cipher = AES.new(key, AES.MODE_CBC, iv=iv)
         try:
             hex_file = cipher.decrypt(encrypted_file)
         except Crypto.Error as e:
             raise Crypto.Error("Error decrypting file") from e
-        
+            
+        # Remove the padding
+        pad_len = hex_file[-1]
+        plaintext = hex_file[:-pad_len]
+
         # Step 6: Save the decrypted data to a new file
         Dpath = os.path.join(directory, f"{hex_file_name}_decrypted.hex")
         with open(Dpath, "wb") as f:
             f.write(hex_file)
-        
+
         print(f"File has been decrypted successfully and saved to {Dpath}")
+
 
 
     def download_file(self):   
@@ -351,6 +361,7 @@ class MainWindow(QMainWindow):
         2. If the music is not playing, start the music player and update the state.
         3. If the music is already playing, stop the music player and update the state.
 
+
         Args:
             self: An instance of the class.
 
@@ -361,6 +372,7 @@ class MainWindow(QMainWindow):
             None.        
         """
         global State 
+        music_folder = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Music"
         # Step 1 : Check the current state of the music player
         if State == 0:
             # Step 2 : If the music is not playing, start the music.
@@ -369,9 +381,16 @@ class MainWindow(QMainWindow):
             msg1.setText("Your Music is Running Now.....")
             msg1.setIcon(QMessageBox.Information)
             msg1.exec_()
-            music_folder = "/home/pi/Desktop/Test/ITI_ADAS_Graduation_Project/Raspberry-Pi_GUI/AnalogGaugeMeterWidget/Music"
-            os.system("mpg321 -Z -q " + music_folder + "/* &")
-            State = 1
+            # Check if the music folder exists and is not empty
+            if os.path.exists(music_folder) and os.listdir(music_folder):
+                subprocess.Popen(["mpg321 -Z -q " + music_folder + "/* &"])
+                State = 1
+            else:
+                msg2 = QMessageBox()
+                msg2.setWindowTitle("Error")
+                msg2.setText("No music found in the specified folder.")
+                msg2.setIcon(QMessageBox.Critical)
+                msg2.exec_()    
         elif State == 1:
             # Step 3 : If the music is already playing, stop the music.
             msg1 = QMessageBox()
@@ -379,7 +398,7 @@ class MainWindow(QMainWindow):
             msg1.setText("Your Music is Stopping Now.....")
             msg1.setIcon(QMessageBox.Information)
             msg1.exec_()
-            os.system("pkill mpg321")
+            subprocess.Popen(["pkill mpg321"])
             State = 0
 
     def open_card_number_window(self):
