@@ -17,6 +17,7 @@ import base64
 # SENDING IS C5D9F1
 # RECIEVING IS E6B8B7
 coloumn_count = 0
+
 def Delete_Key(Gfilename):
     """
     Deletes an encrypted key file that will be used to decrypt the Main Application with a given name from Google Drive.
@@ -126,12 +127,13 @@ def encrypt_file(file_path, folder):
     secure.Upload()    
 
     # Encrypt the key and IV
-    # Create a new AES-ECB cipher
-    cipher = AES.new(key, AES.MODE_ECB)
+    # Create a new AES-CBC cipher
+    cipher = AES.new(key, AES.MODE_CBC, iv)
 
-    # Encrypt the hex file
-    hex_file = pad(hex_file, 16)
-    ciphertext = cipher.encrypt(hex_file)
+    # Add padding to the data to be encrypted
+    block_size = AES.block_size
+    padded_data = hex_file + (block_size - len(hex_file) % block_size) * chr(block_size - len(hex_file) % block_size).encode()
+    ciphertext = cipher.encrypt(padded_data)
 
     # Save the encrypted data to a new file
     encrypted_file_path = os.path.splitext(file_path)[0] 
@@ -182,12 +184,13 @@ def encrypt_file_GSM(file_path,folder):
     secure.SetContentFile(sourceFile)
     secure.Upload()    
     # Encrypt the key and IV
-    # Create a new AES-ECB cipher
-    cipher = AES.new(key, AES.MODE_ECB)
+    # Create a new AES-CBC cipher
+    cipher = AES.new(key, AES.MODE_CBC, iv)
 
-    # Encrypt the hex file
-    hex_file = pad(hex_file, 16)
-    ciphertext = cipher.encrypt(hex_file)
+    # Add padding to the data to be encrypted
+    block_size = AES.block_size
+    padded_data = hex_file + (block_size - len(hex_file) % block_size) * chr(block_size - len(hex_file) % block_size).encode()
+    ciphertext = cipher.encrypt(padded_data)
 
     # Save the encrypted data to a new file
     encrypted_file_path =  os.path.splitext(file_path)[0] 
